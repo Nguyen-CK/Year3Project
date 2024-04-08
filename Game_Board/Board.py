@@ -187,6 +187,7 @@ class Board:
                         2nd: True if capture is available, False if End on Box or Double empty
                         and the Tile that can be capture
                         and the direction the move is currently on
+                        and the previous adjacent Tile that it stopped on
         """
         num_of_moves = current_square.pebble_stored
         current_square.empty()
@@ -373,3 +374,11 @@ class Board:
                 value += tile.capture_square()
 
         return value
+
+    def end_turn(self):
+        if self.turn == 1:
+            self.turn = 2
+        elif self.turn == 2:
+            self.turn = 1
+        else:
+            return

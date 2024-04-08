@@ -95,8 +95,7 @@ while running:
                         print(f"Score: {cap_score}")
                         get_turn().add_score(cap_score)
 
-                    #player = get_turn()
-                    end_turn()
+                    board.end_turn()
                     if board.check_row_empty():
                         board.refill_row(get_turn())
 
