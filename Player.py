@@ -33,3 +33,6 @@ class Player:
             text_y = 100
 
         screen.blit(text_print, (text_x, text_y))
+
+    def __eq__(self, other):
+        return self.num == other.num
