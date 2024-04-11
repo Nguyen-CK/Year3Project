@@ -126,4 +126,5 @@ class Square:
         return value
 
     def __eq__(self, other):
-        return self.rel_x == other.rel_x and self.rel_y == other.rel_y
+        return (self.rel_x == other.rel_x and self.rel_y == other.rel_y
+                and self.pebble_stored == other.pebble_stored and self.player == other.player)

@@ -1,38 +1,37 @@
+import time
+
 import pygame
 from pygame import display
 
+from AI import MiniMax, Tree
 from Game_Board import Square, Board, Box, Arrow
 from Game_Board.Direction import Direction
 import Player
-from Pieces import Pebble
 
 pygame.init()
 
 screen_width = 1200
 screen_height = 720
-
 screen = pygame.display.set_mode((screen_width, screen_height))
 running = True
 
 player_1 = Player.Player(1)
 player_2 = Player.Player(2)
 
-# test_square = Square.Square(300, 250, 1, 1,100, player_1)
-# test_arrow = Arrow.Arrow(300, 250, 1, Direction.LEFT)
-
 # Attributes for a Tile
 starting_x_position = screen_width // 6
 starting_y_position = screen_height // 3
 side = screen_width // 10
 
-# top_row = []
-# bottom_row = []
-
-# test_pebble_1 = Pebble.Pebble(300, 350, 30)
-# test_pebble_2 = Pebble.Pebble(400, 450, 20)
-# test_box = Box.Box(100, 100, 50)
-
 board = Board.Board(starting_x_position, starting_y_position, side)
+
+# AI attributes
+maximizing_player = player_2
+
+tree = Tree.Tree(board, player_1, player_2, maximizing_player)
+tree.build_tree()
+
+# testing_algorithm = MiniMax.MiniMax(maximizing_player, tree)
 
 
 def end_turn():
@@ -51,6 +50,18 @@ def get_turn():
         return player_2
     else:
         return None
+
+
+def play_turn(tile: Square, direction: Direction):
+    moved = board.full_move(tile, direction)
+    if moved[1]:
+        cap_score = board.capture(moved[2], moved[3], moved[4])
+        print(f"Score: {cap_score}")
+        get_turn().add_score(cap_score)
+
+    board.end_turn()
+    if board.check_row_empty():
+        board.refill_row(get_turn())
 
 
 def add_score(player: Player, score: int):
@@ -76,28 +87,51 @@ for row in board.row_matrix:
         print(stri)
 """
 while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-            mx, my = pygame.mouse.get_pos()
-            if event.button == 1:
-                # mouse_coord = f"x: {mx}    y: {my}"
-                # print(mouse_coord)
-                result = board.handle_click(mx, my)
-                direction = result[0]
-                square = result[1]
+    if board.turn == maximizing_player.num:
+        print("Running From Here!!!!")
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        """
+        start_time = time.time()
 
-                if direction is not None and square is not None:
-                    moved = board.full_move(square, direction)
-                    if moved[1]:
-                        cap_score = board.capture(moved[2], moved[3], moved[4])
-                        print(f"Score: {cap_score}")
-                        get_turn().add_score(cap_score)
+        result = testing_algorithm.run(testing_algorithm.current_node)
+        move_node = result[0]
+        num_of_search = result[1]
 
-                    board.end_turn()
-                    if board.check_row_empty():
-                        board.refill_row(get_turn())
+        end_time = time.time()
+
+        square, direct = move_node.move()
+        play_turn(square, direct)
+        testing_algorithm.update_current_node(square, direct)
+        """
+    else:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                mx, my = pygame.mouse.get_pos()
+                if event.button == 1:
+                    # mouse_coord = f"x: {mx}    y: {my}"
+                    # print(mouse_coord)
+                    result = board.handle_click(mx, my)
+                    direct = result[0]
+                    square = result[1]
+
+                    if direct is not None and square is not None:
+                        play_turn(square, direct)
+                        """
+                        moved = board.full_move(square, direction)
+                        if moved[1]:
+                            cap_score = board.capture(moved[2], moved[3], moved[4])
+                            print(f"Score: {cap_score}")
+                            get_turn().add_score(cap_score)
+
+                        board.end_turn()
+                        if board.check_row_empty():
+                            board.refill_row(get_turn())
+                        """
+    # time.sleep(3)
 
     if board.is_game_over():
         player_1.add_score(board.clear_row(player_1))

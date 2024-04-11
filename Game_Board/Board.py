@@ -142,18 +142,6 @@ class Board:
         current_x = 0
         current_y = 0
         if isinstance(current_tile, Box):
-            """
-            # if previous_tile is Square:
-            if previous_tile.rel_y == 0:
-                current_y = 1
-            elif previous_tile.rel_y == 1:
-                current_y = 0
-
-            if current_tile == self.right_box:
-                next_x = 4
-            elif current_tile == self.left_box:
-                next_x = 0
-            """
             next_pos = self.get_next_pos_from_box(current_tile, previous_tile)
             next_x = next_pos[0]
             current_y = next_pos[1]
@@ -195,6 +183,7 @@ class Board:
         previous = None
 
         while num_of_moves >= 0:
+            """
             ## DEBUG PRINT
             print(f"Current Direction: {direction}")
             if isinstance(current, Box):
@@ -205,7 +194,7 @@ class Board:
             else:
                 print(f"Current X: {current.rel_x}    Current Y: {current.rel_y}    Pebble: {current.pebble_stored}")
             print(f"{num_of_moves} moves left")
-
+            """
             # When out of pebbles(moves)
             if num_of_moves == 0:
                 next_square = None
@@ -235,9 +224,9 @@ class Board:
                     current = next_square
                     continue
                 else:
-                    is_cap = self.is_capture_available(current, direction, previous)
-                    if is_cap[0]:
-                        return True, True, is_cap[1], is_cap[2], previous  # End turn on capture
+                    is_cap, cap_tile, direct = self.is_capture_available(current, direction, previous)
+                    if is_cap:
+                        return True, True, cap_tile, direct, previous  # End turn on capture
                     else:
                         return True, False, None, direction, previous  # End turn on double empty Tile
 
@@ -250,11 +239,11 @@ class Board:
             is_same_direction = result[1]
             if not is_same_direction:
                 direction = direction.swap()
-            print("--------------")
+            # print("--------------")
 
-        return False, False, None, direction, None  # ERROR
+        return False, False, None, direction, previous  # ERROR
 
-    def capture(self, current_square: Square, direction: Direction, previous_tile: Square):
+    def capture(self, current_square: Square, direction: Direction, previous_tile):
         value = 0
         current = current_square
         capture_available = True
@@ -271,7 +260,7 @@ class Board:
 
         return value
 
-    def is_capture_available(self, current_tile, direction: Direction, previous_tile=None):
+    def is_capture_available(self, current_tile, direction: Direction, previous_tile):
         adj_tile = None
         capture_tile = None
         next_x = 0
@@ -318,13 +307,14 @@ class Board:
             if capture_tile.is_empty():
                 return False, capture_tile, direction  # Double empty
             else:
-                return True, capture_tile, direction
+                return True, capture_tile, direction  # Capture Available
 
         return False, None, direction
 
     def get_next_pos_from_box(self, box: Box, previous_tile: Square):
         next_x = 0
         next_y = 0
+        assert previous_tile is not None
         if previous_tile.rel_y == 0:
             next_y = 1
         elif previous_tile.rel_y == 1:
