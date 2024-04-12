@@ -2,78 +2,52 @@ import copy
 
 import Player
 from AI import Node
-from Game_Board import Board
+from Game_Board import Board, Square, Direction
 
-player_3 = Player.Player(3, 100)
-player_1 = Player.Player(1, 300)
+player_2 = Player.Player(3, 0)
+player_1 = Player.Player(1, 0)
 
-maximizing_player = copy.copy(player_3)
+maximizing_player = copy.copy(player_2)
 
-board = Board.Board(0, 0, 10)
-node = Node.Node(board, player_1, player_3)
+def play_turn(tile: Square, direction: Direction, board: Board):
+    moved = board.full_move(tile, direction)
+    if moved[1]:
+        cap_score = board.capture(moved[2], moved[3], moved[4])
+        print(f"Score: {cap_score}")
+        get_turn(board).add_score(cap_score)
+
+    board.end_turn()
+    if board.check_row_empty():
+        board.refill_row(get_turn(board))
+
+def get_turn(board):
+    if board.turn == 1:
+        return player_1
+    elif board.turn == 2:
+        return player_2
+    else:
+        return None
+
+
+board_test = Board.Board(0, 0, 10)
+
+node = Node.Node(board_test, player_1, player_2)
 
 node.set_value(maximizing_player)
+node.get_all_possible_moves()
 
-print(node.value)
-print("---------------------------------------")
-print(player_3.score)
-maximizing_player.add_score(1700)
-print(player_3.score)
-print(maximizing_player.score)
-print("---------------------------------------")
+new_board = copy.deepcopy(board_test)
+tile = new_board.get_square_from_pos(0,1)
+copy_tile = copy.deepcopy(tile)
 
-print(float('-inf'))
-bool = float('-inf') < (float('-inf') - 1)
-print(bool)
-print(float('inf'))
+node.children[0].set_value(maximizing_player)
+print("VALUE OF MOVE ! çççççççççççççççç")
+print(node.children[0].value)
+print(node.children[0].player_1.score)
+print(node.children[0].player_2.score)
+print(node.children[0].is_end())
+print(node.is_end())
 
-list_of_bs = [2, 3, 4, 5]
-
-
-def test_recursive(test_depth, iters: int = 0):
-    if test_depth <= 0:
-        return "test", iters
-
-    if test_depth % 2 == 0:
-        for i in range(2):
-            string, iters = test_recursive(test_depth - 1, iters + 1)
-
-        return string, iters
-
-    else:
-        for i in range(2):
-            string, iters = test_recursive(test_depth - 3, iters + 1)
-
-        return string, iters
-
-
-result = test_recursive(10)
-print(result)
-
-test_1 = (1, "no")
-test_2 = (1, "no")
-
-print("---------------------")
-print(test_1 == test_2)
-
-test_matrix = [[0, 1, 2, 1, 4], [1, 3, 0, 0, 1]]
-
-for row in test_matrix:
-    for tile in row:
-        if tile == 0:
-            print
-            continue
-
-        print(f"{tile}: yes")
-
-
-def empty():
-    return
-
-
-null = []
-print(null)
-none = 2
-if none is not None:
-    null.append(none)
-print(null)
+#print(new_board.__str__())
+#play_turn(copy_tile, Direction.Direction.LEFT,new_board)
+#print(new_board.__str__())

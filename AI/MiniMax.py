@@ -11,7 +11,7 @@ class MiniMax:
         self.current_node = game_tree.root
 
     def run(self, node: Node, iters: int = 0):
-        if node.is_terminal():
+        if node.is_terminal() or node.is_end():
             return node, iters
 
         # best_move = None

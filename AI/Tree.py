@@ -12,17 +12,19 @@ class Tree:
 
         self.root.set_value(maximizing_player)
 
-    def build_tree(self):
-        self.generate_branches(self.root)
+    def build_tree(self, node: Node, depth):
+        self.generate_branches(node, depth)
 
-    def generate_branches(self, node: Node):
-        if node.is_terminal():
+    def generate_branches(self, node: Node, depth=0):
+        if node.is_terminal() or depth == 0:
             return
 
         node.get_all_possible_moves()
         node.set_value(self.maximizing_player)
+        #print(f"--------Node value: {node.value}-------------")
+        print("MAKING TREE")
         for child in node.children:
-            self.generate_branches(child)
+            self.generate_branches(child, depth-1)
 
         return
 

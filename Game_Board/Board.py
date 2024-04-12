@@ -221,9 +221,13 @@ class Board:
                 if not next_square.is_empty():
                     num_of_moves = next_square.pebble_stored
                     next_square.empty()
+                    previous = current
                     current = next_square
+                    #print("CALLED IN NOT EMPTY")
+                    #print(self.__str__())
                     continue
                 else:
+                    #print("STOP")
                     is_cap, cap_tile, direct = self.is_capture_available(current, direction, previous)
                     if is_cap:
                         return True, True, cap_tile, direct, previous  # End turn on capture
@@ -239,7 +243,7 @@ class Board:
             is_same_direction = result[1]
             if not is_same_direction:
                 direction = direction.swap()
-            # print("--------------")
+            # print("--------------------------------------")
 
         return False, False, None, direction, previous  # ERROR
 
@@ -372,3 +376,28 @@ class Board:
             self.turn = 1
         else:
             return
+
+    def __str__(self):
+        left_stone = ""
+        if self.left_box.no_stone():
+            left_stone = "NO"
+        else:
+            left_stone = "YES"
+        right_stone = ""
+        if self.right_box.no_stone():
+            right_stone = "NO"
+        else:
+            right_stone = "YES"
+        string = (f"Left Box: {left_stone}, {self.left_box.pebble_stored} "
+                  f"| Right: {right_stone}, {self.right_box.pebble_stored}\n")
+
+        tiles = ""
+        for row in self.row_matrix:
+            tiles += "["
+            for tile in row:
+                tiles += f"{tile.pebble_stored}  "
+            tiles += "]"
+
+        string += tiles
+
+        return string
