@@ -5,13 +5,15 @@ import copy
 
 
 class Node:
-    def __init__(self, board: Board, player_1: Player, player_2: Player,
+    def __init__(self, board: Board, player_1: Player, player_2: Player, maximizing_player: Player,
                  tile: Square = None, direction: Direction = None, parent=None):
         self.board = board
         self.player_1 = player_1
         self.player_2 = player_2
 
-        self.value = 0
+        self.maximizing_player = maximizing_player
+
+        self.value = self.set_value(maximizing_player)
 
         self.move = (tile, direction)
         self.parent = parent
@@ -37,7 +39,7 @@ class Node:
                 continue
             for direction in Direction:
                 move += 1
-
+                """
                 print(f"ºººººººººººººººMOVE: {move}ºººººººººººººººººººººººººº")
                 if direction == Direction.RIGHT:
                     print("Move Right In NODE +++++++++++++++++++++++")
@@ -45,14 +47,16 @@ class Node:
                     print("Move Left In NODE -----------------------")
                 print(f"From: {self.board.__str__()}")
                 print(f"Current Tile: {tile.rel_x}, {tile.rel_y} | Pebbles: {tile.pebble_stored}")
-
+                """
                 tile_x = tile.rel_x
                 tile_y = tile.rel_y
                 child = self.generate_node(tile_x, tile_y, direction, self)
+                """
                 print(f"Moved to: {child.board.__str__()}")
                 print(f"Player 1: {child.player_1.score}     |  Player 2: {child.player_2.score}")
                 print(f"Node value: {child.player_2.score - child.player_1.score}")
                 print("-------------------------------------------------------------------")
+                """
                 if child not in self.children and child is not None:
                     self.add_child(child)
 
@@ -66,15 +70,15 @@ class Node:
         copy_player_1 = copy.deepcopy(self.player_1)
         copy_player_2 = copy.deepcopy(self.player_2)
 
-        #print("------------MOVED IN NODE---------------")
-        #print(new_board.__str__())
+        # print("------------MOVED IN NODE---------------")
+        # print(new_board.__str__())
 
         moved = new_board.full_move(tile, direction)
         if moved[1]:
             cap_score = new_board.capture(moved[2], moved[3], moved[4])
             self.get_turn(new_board, copy_player_1, copy_player_2).add_score(cap_score)
         new_board.end_turn()
-        #print(f"=================End Turn -> {new_board.turn}")
+        # print(f"=================End Turn -> {new_board.turn}")
         if new_board.check_row_empty():
             new_board.refill_row(self.get_turn(new_board, copy_player_1, copy_player_2))
 
@@ -82,7 +86,9 @@ class Node:
             copy_player_1.add_score(new_board.clear_row(copy_player_1))
             copy_player_2.add_score(new_board.clear_row(copy_player_2))
 
-        return Node(new_board, copy_player_1, copy_player_2, tile, direction, parent)
+        #print(f"Moving from: {tile.rel_x}, {tile.rel_y} with {direction}")
+
+        return Node(new_board, copy_player_1, copy_player_2, self.maximizing_player, tile, direction, parent)
 
     def get_turn(self, board, player_1, player_2):
         if board.turn == 1:
@@ -97,9 +103,11 @@ class Node:
 
     def set_value(self, maximizing_player: Player):
         if maximizing_player == self.player_1:
-            self.value = self.player_1.score - self.player_2.score
+            return self.player_1.score - self.player_2.score
         elif maximizing_player == self.player_2:
-            self.value = self.player_2.score - self.player_1.score
+            return self.player_2.score - self.player_1.score
+        else:
+            return 0
 
     def is_end(self):
         return len(self.children) == 0

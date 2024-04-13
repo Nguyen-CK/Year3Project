@@ -7,7 +7,7 @@ from Game_Board import Board, Square, Direction
 
 class Tree:
     def __init__(self, board: Board, player_1: Player, player_2: Player, maximizing_player: Player):
-        self.root = Node(copy.deepcopy(board), player_1, player_2)
+        self.root = Node(copy.deepcopy(board), player_1, player_2, maximizing_player)
         self.maximizing_player = maximizing_player
 
         self.root.set_value(maximizing_player)
