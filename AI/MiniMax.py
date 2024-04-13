@@ -65,9 +65,15 @@ class MiniMax:
                 break
             branch = branch + 1
 
-    def get_play_move(self, node: Node, play_move=None):
+    def get_play_move(self, node: Node, play_move=None, iter=0):
         if node.parent is None:
+            print(f"BEGIN: {node.board.__str__()} | trace: {iter}")
             return play_move
         else:
-            return self.get_play_move(node.parent, node)
+            print(f"Tracing: {node.board.__str__()} | trace: {iter}")
+            print(f"Square: {node.move[0].__str__()} | Direction: {node.move[1].__str__()}")
+            print(f"Player 1: {node.player_1.score} | Player 2: {node.player_2.score}")
+            print(node.value)
+            print("--------------------------------------------------------------")
+            return self.get_play_move(node.parent, node, iter + 1)
 

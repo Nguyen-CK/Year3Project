@@ -51,7 +51,7 @@ minimax = MiniMax.MiniMax(maximizing_player, node)
 # minimax.update_current_node(tile, Direction.Direction.LEFT)
 # print(f"Current Board: \n {minimax.current_node.board.__str__()}")
 start = time.time()
-result = minimax.run(node, 4)
+result = minimax.run(node, 6)
 end = time.time()
 #parent = result[0]
 move_node = result[0]
