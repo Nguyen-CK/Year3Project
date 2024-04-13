@@ -10,12 +10,14 @@ class MiniMax:
         self.current_node = root_node
 
     def run(self, node: Node, depth: int, iters: int = 0):
+        # trace = []
         if node.is_terminal() or depth == 0:
-            return node, iters
+            return node, iters # , trace.extend(node)
 
         # best_move = None
         best_node = None
-        parent = None
+
+        # parent = None
         if node.board.turn == self.maximize_player.num:  # Maximizing if the Turn is of the Player
             #maximize = True
             # print("MAXIMIZING")
@@ -30,7 +32,7 @@ class MiniMax:
                     max_value = val
                     # best_move = move
                     best_node = result_node
-            #return best_node, iters
+            return best_node, iters # , trace.extend(best_node)
 
         else:  # Minimizing if the Turn is not of the Player
             #maximize = False
@@ -47,7 +49,7 @@ class MiniMax:
                     # best_move = move
                     best_node = result_node
 
-        return best_node, iters
+            return best_node, iters  # , trace.extend(best_node)
 
     def update_current_node(self, tile: Square, direction: Direction):
         #print("UPDATING Current Node")
@@ -62,4 +64,10 @@ class MiniMax:
                 self.current_node = child
                 break
             branch = branch + 1
+
+    def get_play_move(self, node: Node, play_move=None):
+        if node.parent is None:
+            return play_move
+        else:
+            return self.get_play_move(node.parent, node)
 

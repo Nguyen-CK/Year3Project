@@ -1,4 +1,5 @@
 import copy
+import time
 
 import Player
 from AI import Node, Tree, MiniMax
@@ -45,23 +46,34 @@ tree = Tree.Tree(new_board, player_1, player_2, maximizing_player)
 # tree.build_tree(tree.root, 4)
 
 minimax = MiniMax.MiniMax(maximizing_player, node)
+
 # print(f"Current Board: \n {minimax.current_node.board.__str__()}")
 # minimax.update_current_node(tile, Direction.Direction.LEFT)
 # print(f"Current Board: \n {minimax.current_node.board.__str__()}")
-
+start = time.time()
 result = minimax.run(node, 4)
+end = time.time()
 #parent = result[0]
 move_node = result[0]
 iterations = result[1]
+# moves = result[2]
+play_move = minimax.get_play_move(move_node)
+move_square = play_move.move[0]
+move_direction = play_move.move[1]
 
 square = move_node.move[0]
 direction = move_node.move[1]
-#print(parent.board.__str__())
-print("--------------------------------")
-print(f"Square: {square.__str__()} | Direction: {direction.__str__()}")
+#print(moves) #.board.__str__())
 print(node.board.__str__())
-print(move_node.board.__str__())
-print(f"Iterations: {iterations}")
+print("--------------------------------")
+print(f"Square: {move_square.__str__()} | Direction: {move_direction.__str__()}")
+print(play_move.board.__str__())
+#print(f"PARENT NODE: {move_node.parent.board.__str__()}")
+print(f"BEST MOVE: {move_node.board.__str__()}")
+print(f"Player 1: {move_node.player_1.score} | Player 2: {move_node.player_2.score}")
+print(move_node.value)
+print(f"Iterations: {iterations} | Time: {end - start}")
+
 
 
 #print(new_board.__str__())
