@@ -3,7 +3,7 @@ import time
 import pygame
 from pygame import display
 
-from AI import MiniMax, Tree, Node
+from AI import MiniMax, Tree, Node, AlphaBeta
 from Game_Board import Square, Board, Box, Arrow
 from Game_Board.Direction import Direction
 import Player
@@ -26,14 +26,12 @@ side = screen_width // 10
 board = Board.Board(starting_x_position, starting_y_position, side)
 
 # AI attributes
+depth = 5
 maximizing_player = player_2
-
-tree = Tree.Tree(board, player_1, player_2, maximizing_player)
-#tree.build_tree(tree.root, 4)
-# tree.generate_branches(tree.root)
 root = Node.Node(board, player_1, player_2, maximizing_player)
 
-testing_algorithm = MiniMax.MiniMax(maximizing_player, root)
+#testing_algorithm = MiniMax.MiniMax(maximizing_player, root)
+testing_algorithm = AlphaBeta.AlphaBeta(maximizing_player, root)
 
 
 def end_turn():
@@ -107,7 +105,7 @@ while running:
 
         start_time = time.time()
 
-        result = testing_algorithm.run(testing_algorithm.current_node, 4)
+        result = testing_algorithm.run(testing_algorithm.current_node, depth)
         move_node = result[0]
         num_of_search = result[1]
         play_move = testing_algorithm.get_play_move(move_node)
@@ -180,5 +178,6 @@ elif player_1.score < player_2.score:
 else:
     print("Draw!")
 
+print(f"With Depth: {depth}")
 print(f"Total Iterations: {total_search}    | Total Time: {total_time}")
 pygame.quit()
