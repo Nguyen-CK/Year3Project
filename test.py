@@ -51,7 +51,7 @@ minimax = MiniMax.MiniMax(maximizing_player, node)
 # minimax.update_current_node(tile, Direction.Direction.LEFT)
 # print(f"Current Board: \n {minimax.current_node.board.__str__()}")
 start = time.time()
-result = minimax.run(node, 6)
+result = minimax.run(node, 5)
 end = time.time()
 #parent = result[0]
 move_node = result[0]
@@ -60,19 +60,24 @@ iterations = result[1]
 play_move = minimax.get_play_move(move_node)
 move_square = play_move.move[0]
 move_direction = play_move.move[1]
+print(minimax.current_node.__str__())
+print(f"BEFORE UPDATE---------\n PARENT: {minimax.current_node.parent}")
+minimax.update_current_node(move_square, move_direction)
 
 square = move_node.move[0]
 direction = move_node.move[1]
 #print(moves) #.board.__str__())
-print(node.board.__str__())
-print("--------------------------------")
-print(f"Square: {move_square.__str__()} | Direction: {move_direction.__str__()}")
-print(play_move.board.__str__())
+#print(node.board.__str__())
+#print("--------------------------------")
+#print(f"Square: {move_square.__str__()} | Direction: {move_direction.__str__()}")
+#print(play_move.board.__str__())
 #print(f"PARENT NODE: {move_node.parent.board.__str__()}")
-print(f"BEST MOVE: {move_node.board.__str__()}")
-print(f"Player 1: {move_node.player_1.score} | Player 2: {move_node.player_2.score}")
-print(move_node.value)
+#print(f"BEST MOVE: {move_node.board.__str__()}")
+#print(f"Player 1: {move_node.player_1.score} | Player 2: {move_node.player_2.score}")
+#print(move_node.value)
 print(f"Iterations: {iterations} | Time: {end - start}")
+print(minimax.current_node.__str__())
+print(f" PARENT: {minimax.current_node.parent}")
 
 
 

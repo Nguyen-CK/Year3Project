@@ -1,13 +1,12 @@
 import Player
-from AI.Tree import Tree
+from AI import Node
 
 
 class AlphaBeta:
-    def __init__(self, maximize_player: Player, game_tree: Tree):
+    def __init__(self, maximize_player: Player, root_node: Node):
         self.maximize_player = maximize_player
-        self.game_tree = game_tree
 
-        self.current_node = None
+        self.current_node = root_node
 
     def run(self):
         return

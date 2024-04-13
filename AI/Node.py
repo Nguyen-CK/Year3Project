@@ -111,3 +111,8 @@ class Node:
 
     def is_end(self):
         return len(self.children) == 0
+
+    def __str__(self):
+        return (f"------------------Node---------------------\n "
+                f"Board: {self.board.__str__()}\n Tile move: {self.move[0]}     | Direction: {self.move[1]} \n "
+                f"Player 1: {self.player_1.score} | Player 2: {self.player_2.score}\n Value: {self.value}")
