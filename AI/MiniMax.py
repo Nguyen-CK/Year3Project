@@ -4,19 +4,35 @@ from Game_Board import Square, Direction
 
 
 class MiniMax:
+    """
+    An AI class that uses MiniMax algorithm to search for the best move
+    Attributes:
+    maximize_player (Player): The AI player, one that need to get moves to win for
+    current_node (Node): The current state of the Game
+    """
     def __init__(self, maximize_player: Player, root_node: Node):
         self.maximize_player = maximize_player
         self.current_node = root_node
 
     def run(self, node: Node, depth: int, iters: int = 0):
+        """
+        Run the algorithm to find the best move, stop when it reaches the end of the game or the desired depth
+        Minimax will search for every possible move and consider them all
+        :param node: the state of the game
+        :param depth: how many turns ahead should be searched for
+        :param iters: number of search it did
+        :return: node: the best move
+                 iter: number of search
+        """
         if node.is_terminal() or depth == 0:
             return node, iters
 
         best_node = None
 
-        if node.board.turn == self.maximize_player.num:  # Maximizing if the Turn is of the Player
-            #maximize = True
-            # print("MAXIMIZING")
+        if node.board.turn == self.maximize_player.num:
+            """
+            MAXIMIZING
+            """
             max_value = float('-inf')
 
             node.get_all_possible_moves()
@@ -30,9 +46,10 @@ class MiniMax:
 
             return best_node, iters
 
-        else:  # Minimizing if the Turn is not of the Player
-            #maximize = False
-            #print("MINIMIZING")
+        else:
+            """
+            MINIMIZING
+            """
             min_value = float('inf')
 
             node.get_all_possible_moves()
@@ -47,6 +64,12 @@ class MiniMax:
             return best_node, iters
 
     def update_current_node(self, tile: Square, direction: Direction):
+        """
+        Updates the current state of the Game in the AI
+        :param tile: tile to move from
+        :param direction: direction to move to
+        :return:
+        """
         #print("UPDATING Current Node")
         move = (tile, direction)
         branch = 1
@@ -62,6 +85,13 @@ class MiniMax:
             branch = branch + 1
 
     def get_play_move(self, node: Node, play_move=None, iterations=0):
+        """
+        Back tracking the trace to find the move to play from the current state of the Game
+        :param node: best move found in the tree
+        :param play_move: move to play from the current state
+        :param iterations: traces of the backtrack
+        :return: the move to play from the current state
+        """
         if node.parent is None:
             #print(f"BEGIN: {node.board.__str__()} | trace: {iterations}")
             return play_move

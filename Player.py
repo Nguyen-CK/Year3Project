@@ -14,13 +14,27 @@ class Player:
         self.score = score
 
     def add_score(self, score):
+        """
+        Adds a score to the Player
+        :param score: value to add
+        :return:
+        """
         self.score += score
 
     def borrow_pebble(self):
+        """
+        Take pebbles from the player
+        :return:
+        """
         self.score -= 5
         return 5
 
     def display_score(self, screen):
+        """
+        Displays the score of the player on the screen
+        :param screen: screen to display to
+        :return:
+        """
         font = pygame.font.SysFont(None, 32)
         text = f"Player {self.num}:     {self.score}"
 

@@ -65,19 +65,6 @@ class Square:
         pygame.draw.rect(screen, black, self.rect_border, border_thickness)  # border
         self.display_pebbles(self.pebble_stored, screen)
 
-    """
-    def start_fill(self):
-        
-        Fills the square with initial amount of Pebbles
-        :return:
-        
-        for i in range(5):
-            rand_x = random.randint(self.x + pebble_radius, self.x + self.side - pebble_radius)
-            rand_y = random.randint(self.y + pebble_radius, self.y + self.side - pebble_radius)
-            new_pebble = Pebble(rand_x, rand_y, pebble_radius)
-            self.pebble_stored.append(new_pebble)
-    """
-
     def display_pebbles(self, pebbles, screen):
         """
         Displays the number of Pebbles in the Square
@@ -126,9 +113,7 @@ class Square:
         return value
 
     def __eq__(self, other):
-        # print(f"This pebbles: {self.pebble_stored} and Other pebbles: {other.pebble_stored}")
         return (self.rel_x == other.rel_x and self.rel_y == other.rel_y)
-                #and self.pebble_stored == other.pebble_stored) #and self.player == other.player)
 
     def __str__(self):
         return f"Tile: {self.rel_x}, {self.rel_y} | {self.pebble_stored} pebbles"

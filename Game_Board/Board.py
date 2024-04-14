@@ -8,6 +8,26 @@ from Game_Board.Direction import Direction
 
 
 class Board:
+    """
+    A class to represent a game board
+    Attributes:
+        width (int): width of the board
+        height (int): height of the board
+        square_side (int): side of the square
+        x_position (int): x position of the board (starting)
+        y_position (int): y position of the board (starting)
+
+        layout: The layout of the board
+        row_matrix: 2D array to hold the tiles(Square)
+        left_box (Box): the left box of the board
+        right_box (Box): the right box of the board
+
+        selected_square (Square): the current square the player selected
+        turn (int): the current turn of the game
+
+        left_arrow (Arrow): the left arrow to go left
+        right_arrow (Arrow): the right arrow to go right
+    """
     def __init__(self, x_position, y_position, side):
         self.width = side * 7
         self.height = side * 2
@@ -33,6 +53,10 @@ class Board:
         self.right_arrow = None
 
     def fill_board(self):
+        """
+        Fills the board with all the tiles, 2 Boxes and the rows with Squares
+        :return:
+        """
         top_row: list[Square] = []
         bottom_row: list[Square] = []
 
@@ -67,6 +91,11 @@ class Board:
         return board
 
     def draw_board(self, screen):
+        """
+        Draws the board and the Arrows
+        :param screen: screen to draw the board on
+        :return:
+        """
         for row in self.row_matrix:
             for square in row:
                 square.draw(screen)
@@ -78,12 +107,26 @@ class Board:
             self.right_arrow.draw(screen)
 
     def get_square_from_pos(self, x, y):
+        """
+        Get the tile from x, y (relative)
+        :param x: relative x position of the tile
+        :param y: relative y position of the tile
+        :return: the tile
+        """
         for row in self.row_matrix:
             for tile in row:
                 if tile.rel_x == x and tile.rel_y == y:
                     return tile
 
     def handle_click(self, mx, my):
+        """
+        Handle the mouse click during the game
+        :param mx: mouse x position
+        :param my: mouse y position
+        :return: Direction to move to
+                 Square to move from
+                 None if just choosing tile or deselecting tile
+        """
         row_start_x = self.x_position + self.square_side
         row_start_y = self.y_position
 
@@ -97,7 +140,7 @@ class Board:
         if 0 <= x < 5 and 0 <= y < 2:
             clicked_square = self.get_square_from_pos(x, y)
 
-        if self.selected_square is None:
+        if self.selected_square is None:  # SELECTING TILE
             if clicked_square is not None and not clicked_square.is_empty():
                 # print(clicked_square.rel_x)
                 if clicked_square.player == self.turn:
@@ -115,14 +158,14 @@ class Board:
                     self.right_arrow = Arrow(x_off_set, y_off_set, self.turn, Direction.RIGHT)
                     # print(self.selected_square.rel_x)
                     # print(self.selected_square.rel_y)
-        else:
+        else:  # SELECTING DIRECTION
             if self.left_arrow.is_in_bound(mx, my):
                 print("MOVING LEFT")  # MOVE LEFT
                 return self.left_arrow.handle_click(), self.selected_square
             elif self.right_arrow.is_in_bound(mx, my):
                 print("MOVING RIGHT")  # MOVE RIGHT
                 return self.right_arrow.handle_click(), self.selected_square
-            else:
+            else:  # DESELECTING
                 self.selected_square.is_highlighted = False
                 self.selected_square = None
 
@@ -132,12 +175,23 @@ class Board:
         return None, None
 
     def is_game_over(self):
+        """
+        Checks if the game is over
+        :return: True if it is, False otherwise
+        """
         if self.left_box.no_stone() and self.right_box.no_stone():
             return True
 
         return False
 
     def move(self, current_tile, direction: Direction, previous_tile=None):
+        """
+        Moves from a tile to the other
+        :param current_tile: tile to move from
+        :param direction: direction to move to
+        :param previous_tile: tile from the previous move
+        :return: the moved tile, boolean to check if the direction stay the same
+        """
         next_x = 0
         current_x = 0
         current_y = 0
@@ -218,7 +272,7 @@ class Board:
                     else:
                         next_square = self.get_square_from_pos((current.rel_x + direction.value), current.rel_y)
 
-                if not next_square.is_empty():
+                if not next_square.is_empty():  # REPEAT MOVING IF NOT EMPTY
                     num_of_moves = next_square.pebble_stored
                     next_square.empty()
                     previous = current
@@ -226,7 +280,7 @@ class Board:
                     #print("CALLED IN NOT EMPTY")
                     #print(self.__str__())
                     continue
-                else:
+                else:  # STOPPING
                     #print("STOP")
                     is_cap, cap_tile, direct = self.is_capture_available(current, direction, previous)
                     if is_cap:
@@ -248,6 +302,13 @@ class Board:
         return False, False, None, direction, previous  # ERROR
 
     def capture(self, current_square: Square, direction: Direction, previous_tile):
+        """
+        Capture the tiles and the one after it if possible
+        :param current_square: tile to capture
+        :param direction: direction to continue capture
+        :param previous_tile: tile preceded the capture tile
+        :return: score from the capture(s)
+        """
         value = 0
         current = current_square
         capture_available = True
@@ -265,10 +326,22 @@ class Board:
         return value
 
     def is_capture_available(self, current_tile, direction: Direction, previous_tile):
+        """
+        Check if the tile can be captured and the one after it if possible
+        :param current_tile: tile to check
+        :param direction: direction to capture
+        :param previous_tile: tile preceded the checked tile
+        :return: boolean: True if the tile can be captured, False otherwise
+                 tile to be captured
+                 current direction capturing
+        """
         adj_tile = None
         capture_tile = None
         next_x = 0
         # next_y = 0
+        """
+        Check tile right after
+        """
         if isinstance(current_tile, Box):
             next_pos = self.get_next_pos_from_box(current_tile, previous_tile)
             next_x = next_pos[0]
@@ -308,6 +381,9 @@ class Board:
                     cap_x = adj_tile.rel_x + direction.value
                     capture_tile = self.get_square_from_pos(cap_x, adj_tile.rel_y)
 
+            """
+            Check the capture tile
+            """
             if capture_tile.is_empty():
                 return False, capture_tile, direction  # Double empty
             else:
@@ -316,6 +392,12 @@ class Board:
         return False, None, direction
 
     def get_next_pos_from_box(self, box: Box, previous_tile: Square):
+        """
+        Get the next if move from Box to tile
+        :param box: Box moving from
+        :param previous_tile: tile preceded the box from moving
+        :return: position to move to
+        """
         next_x = 0
         next_y = 0
         assert previous_tile is not None
@@ -332,6 +414,10 @@ class Board:
         return next_x, next_y
 
     def check_row_empty(self):
+        """
+        Check if the row of the turn is empty
+        :return: True if row is empty, False otherwise
+        """
         row = None
         if self.turn == 1:
             row = self.row_matrix[1]
@@ -347,6 +433,11 @@ class Board:
         return True
 
     def refill_row(self, player):
+        """
+        Refill the row of the turn, by taking from the player
+        :param player: player to take from
+        :return:
+        """
         to_fill = player.borrow_pebble()
         if player.num == 1:
             for tile in self.row_matrix[1]:
@@ -356,6 +447,11 @@ class Board:
                 tile.add_pebble()
 
     def clear_row(self, player):
+        """
+        Empty the rows and add them to the player
+        :param player: turn, to get the row for it
+        :return: score to add
+        """
         row = None
         value = 0
         if player.num == 1:
@@ -370,6 +466,10 @@ class Board:
         return value
 
     def end_turn(self):
+        """
+        Ends the turn
+        :return:
+        """
         if self.turn == 1:
             self.turn = 2
         elif self.turn == 2:

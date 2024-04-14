@@ -6,7 +6,18 @@ color = (0, 0, 0)
 
 
 class Box:
+    """
+    This class represents a box at the end of the game board
+    Attributes:
+        x (int): x position of the box
+        y (int): y position of the box
+        width (int): width of the box
+        height (int): height of the box
+        rect (pygame.Rect): the rectangle to draw
+        stone (Stone): the stone in the Box
+        pebble_stored (int): the pebble in the Box
 
+    """
     def __init__(self, x_position, y_position, side):
         self.x = x_position
         self.y = y_position
@@ -25,6 +36,11 @@ class Box:
         self.pebble_stored = 0
 
     def draw(self, screen):
+        """
+        Draws the box on the screen
+        :param screen: screen to draw to
+        :return:
+        """
         pygame.draw.rect(screen, color, self.rect, border_thickness)
         if self.stone is not None:
             self.stone.draw(screen)
@@ -50,21 +66,41 @@ class Box:
         screen.blit(number_image, (text_x, text_y))
 
     def no_stone(self):
+        """
+        Checks if the Box has no Stone
+        :return: True if the Board has no stone, False otherwise
+        """
         return True if self.stone is None else False
 
     def is_empty(self):
+        """
+        Checks if the Box is empty
+        :return: True if the Box is empty, False otherwise
+        """
         if self.no_stone() and self.pebble_stored == 0:
             return True
         else:
             return False
 
     def add_pebble(self):
+        """
+        Adds a Pebble to the Box
+        :return:
+        """
         self.pebble_stored += 1
 
     def remove_stone(self):
+        """
+        Removes the Stone from the Box
+        :return:
+        """
         self.stone = None
 
     def capture_box(self):
+        """
+        Captures the Box
+        :return: the points get from the Box
+        """
         value = self.pebble_stored
         if self.stone is not None:
             value += self.stone.value
