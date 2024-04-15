@@ -40,11 +40,14 @@ board = Board.Board(starting_x_position, starting_y_position, side)
 
 # AI attributes
 depth = 4
-maximizing_player = player_1
+"""
+To make AI either player 1 or player 2, change the number below (player_1 or player_2)
+"""
+maximizing_player = player_2
 root = Node.Node(board, player_1, player_2, maximizing_player)
 """
 --------------AI CREATION--------------
-NOTE: to use MiniMax AI uncomment line 49 and comment line 50 | to use Alpha-Beta AI do the reverse
+NOTE: to use MiniMax AI uncomment line 52 and comment line 53 | to use Alpha-Beta AI do the reverse
 """
 # testing_algorithm = MiniMax.MiniMax(maximizing_player, root)
 testing_algorithm = AlphaBeta.AlphaBeta(maximizing_player, root)
