@@ -39,7 +39,7 @@ side = screen_width // 10
 board = Board.Board(starting_x_position, starting_y_position, side)
 
 # AI attributes
-depth = 4
+depth = 7  # CHANGE DEPTH TO MAKE AI TRAVEL HOW MANY MOVES AHEAD, 4 is fast for Minimax, 5 will be slow
 """
 To make AI either player 1 or player 2, change the number below (player_1 or player_2)
 """

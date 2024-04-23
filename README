@@ -1,0 +1,11 @@
+HOW TO USE THE PROGRAM
+
+1. Run from either Main.py, for player on AI game or Multiplayer.py, for player on player game
+
+If play from Main.py:
+- Change "depth" variable to set how far the AI will search for
+- Comment the "test_algorithm" you do not want to play against.
+E.g.: comment "testing_algorithm = MiniMax.MiniMax(maximizing_player, root)" and leave
+"testing_algorithm = AlphaBeta.AlphaBeta(maximizing_player, root)" uncommented to play against Alpha-beta pruning AI
+
+NOTE: for MiniMax, depth 5 will be slow. For AlphaBeta, depth 7 will be slow.
